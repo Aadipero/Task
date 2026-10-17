@@ -168,7 +168,7 @@
       padding: 0 4px;
     }
 
-    /* Start Task 3D Golden CTA Button */
+    /* Start Task CTA Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -212,6 +212,12 @@
 
   <div class="ambient-glow"></div>
 
+  <!-- Hidden Native Audio with Direct Soft Calm Chime -->
+  <audio id="calmSound" preload="auto">
+    <source src="https://actions.google.com/sounds/v1/foley/beeps_single.ogg" type="audio/ogg">
+    <source src="https://cdn.freesound.org/previews/264/264981_4486188-lq.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="card" id="card">
     <div class="floating-popup">
       <span></span> New Task
@@ -228,7 +234,7 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Auto start bot URL -->
+    <!-- Bot URL with auto /start parameter -->
     <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskBtn" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
@@ -242,57 +248,61 @@
   </div>
 
   <script>
-    // Calm, Gentle Ambient Bell Sound Engine (Soft Lo-Fi Chime)
-    let audioPlayed = false;
+    const audioElement = document.getElementById('calmSound');
+    let soundTriggered = false;
 
-    function playSoftCalmSound() {
-      if (audioPlayed) return;
-      audioPlayed = true;
+    // Direct Native Audio Trigger
+    function playCalmTone() {
+      if (soundTriggered) return;
+      soundTriggered = true;
 
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
-
-        if (ctx.state === 'suspended') {
-          ctx.resume();
-        }
-
-        // F-Major Chill Harmonic Notes (Soft, Warm, Meditative)
-        const notes = [
-          { freq: 349.23, delay: 0.0, decay: 2.8, gain: 0.12 }, // F4
-          { freq: 523.25, delay: 0.16, decay: 3.0, gain: 0.10 }, // C5
-          { freq: 698.46, delay: 0.32, decay: 3.2, gain: 0.08 }, // F5
-          { freq: 880.00, delay: 0.48, decay: 3.5, gain: 0.06 }  // A5
-        ];
-
-        notes.forEach(n => {
-          const osc = ctx.createOscillator();
-          const gainNode = ctx.createGain();
-
-          osc.type = 'sine'; // Pure soft waveform
-          osc.frequency.setValueAtTime(n.freq, ctx.currentTime + n.delay);
-
-          // Smooth gentle attack & long fading decay
-          gainNode.gain.setValueAtTime(0.0001, ctx.currentTime + n.delay);
-          gainNode.gain.linearRampToValueAtTime(n.gain, ctx.currentTime + n.delay + 0.1);
-          gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + n.delay + n.decay);
-
-          osc.connect(gainNode);
-          gainNode.connect(ctx.destination);
-
-          osc.start(ctx.currentTime + n.delay);
-          osc.stop(ctx.currentTime + n.delay + n.decay + 0.1);
+      audioElement.volume = 0.5; // Soft volume
+      audioElement.currentTime = 0;
+      
+      const playPromise = audioElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Fallback if network blocked
+          playLocalSynthesizer();
         });
-      } catch (err) {
-        console.warn("Audio Context unlock waiting for tap:", err);
       }
     }
 
-    // Touch, click or scroll anywhere on screen immediately unlocks and plays calm sound
-    window.addEventListener('touchstart', playSoftCalmSound, { passive: true, once: true });
-    window.addEventListener('pointerdown', playSoftCalmSound, { once: true });
-    window.addEventListener('click', playSoftCalmSound, { once: true });
-    window.addEventListener('scroll', playSoftCalmSound, { once: true });
+    // Direct fallback if audio file isn't cached
+    function playLocalSynthesizer() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5 Soft Tone
+
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.8);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1.9);
+      } catch (e) {}
+    }
+
+    // Screen par kahin bhi pehla touch ya click hote hi play karega
+    document.addEventListener('touchstart', playCalmTone, { passive: true, once: true });
+    document.addEventListener('pointerdown', playCalmTone, { once: true });
+    document.addEventListener('click', playCalmTone, { once: true });
+
+    // Button click hone par bhi sound trigger karega
+    document.getElementById('taskBtn').addEventListener('click', () => {
+      audioElement.currentTime = 0;
+      audioElement.play().catch(() => playLocalSynthesizer());
+    });
 
     // 3D Card Gyro Touch Tilt
     const cardEl = document.getElementById('card');
