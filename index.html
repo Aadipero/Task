@@ -17,111 +17,96 @@
     }
 
     body {
-      background: #06050e;
+      background: #05040a;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 18px;
+      padding: 16px;
       color: #ffffff;
       overflow-x: hidden;
       perspective: 1000px;
       position: relative;
     }
 
-    /* Multi-layered Neon Ambient Aura */
-    .glow-sphere-1 {
+    /* Ambient Glow Background */
+    .ambient-glow {
       position: fixed;
-      width: 480px;
-      height: 480px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 75%);
-      top: 35%;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(234, 179, 8, 0.14) 45%, transparent 70%);
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: blur(65px);
+      filter: blur(60px);
       z-index: 0;
       pointer-events: none;
-      animation: floatAura 6s ease-in-out infinite alternate;
+      animation: pulseGlow 4s ease-in-out infinite alternate;
     }
 
-    .glow-sphere-2 {
-      position: fixed;
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(234, 179, 8, 0.16) 0%, transparent 70%);
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      filter: blur(50px);
-      z-index: 0;
-      pointer-events: none;
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.7; }
+      100% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
     }
 
-    @keyframes floatAura {
-      0% { transform: translate(-50%, -46%) scale(0.95); }
-      100% { transform: translate(-50%, -54%) scale(1.1); }
-    }
-
-    /* Sound Unlocker Prompt Barrier */
+    /* Tap to Enter Gate Overlay (Guarantees Sound on Chrome) */
     .audio-gate {
       position: fixed;
       inset: 0;
-      background: rgba(5, 4, 12, 0.65);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(5, 4, 12, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 999;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       cursor: pointer;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
     .gate-btn {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(234, 179, 8, 0.2));
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(234, 179, 8, 0.25));
+      border: 1px solid rgba(255, 255, 255, 0.4);
       padding: 14px 28px;
       border-radius: 50px;
       font-size: 15px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      color: #fff;
+      color: #ffffff;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35);
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
       animation: gatePulse 1.8s infinite ease-in-out;
     }
 
     @keyframes gatePulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35); }
-      50% { transform: scale(1.06); box-shadow: 0 15px 45px rgba(234, 179, 8, 0.45); }
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(234, 179, 8, 0.5); }
     }
 
-    /* Main Futuristic Card */
+    /* 3D Glass Card */
     .card {
       position: relative;
-      background: linear-gradient(170deg, rgba(30, 24, 52, 0.94) 0%, rgba(13, 11, 24, 0.98) 100%);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 32px;
+      background: linear-gradient(170deg, rgba(30, 24, 52, 0.95) 0%, rgba(13, 11, 24, 0.98) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 30px;
       width: 100%;
       max-width: 350px;
-      padding: 38px 24px 28px;
+      padding: 36px 22px 28px;
       text-align: center;
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       z-index: 10;
       transform-style: preserve-3d;
       box-shadow: 
-        0 35px 70px rgba(0, 0, 0, 0.85),
-        0 0 70px rgba(168, 85, 247, 0.18),
+        0 30px 60px rgba(0, 0, 0, 0.85),
+        0 0 60px rgba(168, 85, 247, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      transition: transform 0.25s ease-out;
+      transition: transform 0.2s ease-out;
     }
 
-    /* Floating Status Badge */
     .floating-popup {
       position: absolute;
       top: -14px;
@@ -132,11 +117,10 @@
       font-weight: 800;
       padding: 6px 14px;
       border-radius: 50px;
-      box-shadow: 0 8px 22px rgba(16, 185, 129, 0.5);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      letter-spacing: 0.3px;
     }
 
     .floating-popup span {
@@ -145,15 +129,8 @@
       background: #ffffff;
       border-radius: 50%;
       box-shadow: 0 0 8px #ffffff;
-      animation: blinkDot 1.4s infinite alternate;
     }
 
-    @keyframes blinkDot {
-      0% { opacity: 0.3; }
-      100% { opacity: 1; }
-    }
-
-    /* 3D Glowing Avatar Ring */
     .avatar-wrapper {
       position: relative;
       width: 136px;
@@ -164,9 +141,7 @@
       background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4, #f59e0b);
       background-size: 300% 300%;
       animation: shiftGrad 5s linear infinite;
-      box-shadow: 
-        0 18px 40px rgba(139, 92, 246, 0.5),
-        0 0 50px rgba(236, 72, 153, 0.25);
+      box-shadow: 0 18px 40px rgba(139, 92, 246, 0.5);
     }
 
     @keyframes shiftGrad {
@@ -185,7 +160,6 @@
       border: 3.5px solid #0f0e17;
     }
 
-    /* Active Badge */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -215,9 +189,7 @@
       font-weight: 800;
       line-height: 1.25;
       margin-bottom: 10px;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
     }
 
     p.subtitle {
@@ -225,10 +197,9 @@
       color: #94a3b8;
       line-height: 1.5;
       margin-bottom: 26px;
-      padding: 0 6px;
+      padding: 0 4px;
     }
 
-    /* Start Task 3D Golden CTA Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -245,14 +216,13 @@
       border-radius: 18px;
       box-shadow: 
         0 14px 28px rgba(234, 179, 8, 0.45),
-        0 5px 0 #a16207,
-        inset 0 1.5px 0 rgba(255, 255, 255, 0.6);
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        0 5px 0 #a16207;
+      transition: all 0.2s ease;
     }
 
     .cta-btn:active {
       transform: translateY(4px);
-      box-shadow: 0 4px 12px rgba(234, 179, 8, 0.35), 0 1px 0 #a16207;
+      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.35), 0 1px 0 #a16207;
     }
 
     .cta-btn svg {
@@ -270,16 +240,14 @@
 </head>
 <body>
 
-  <!-- Background Auras -->
-  <div class="glow-sphere-1"></div>
-  <div class="glow-sphere-2"></div>
+  <div class="ambient-glow"></div>
 
-  <!-- Sound Unlock Overlay (Guarantees Sound on Chrome/Mobile) -->
+  <!-- Audio Gate (Clicking this unlocks Chrome Audio instantly) -->
   <div class="audio-gate" id="audioGate">
     <div class="gate-btn">
       ✨ Tap Anywhere to Enter
     </div>
-    <span style="font-size: 12px; color: #94a3b8;">Headphones Recommended 🎧</span>
+    <span style="font-size: 12px; color: #94a3b8;">(Make sure Media Volume is turned ON 🔊)</span>
   </div>
 
   <div class="card" id="card">
@@ -298,7 +266,6 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Bot URL with auto /start command -->
     <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskBtn" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
@@ -312,66 +279,84 @@
   </div>
 
   <script>
-    let audioUnlocked = false;
+    // 100% Reliable In-Memory WAV Chime Generator (No network / CORS issues)
+    function generateChimeWAV() {
+      const sampleRate = 22050;
+      const duration = 2.2;
+      const numSamples = Math.floor(sampleRate * duration);
+      const buffer = new Uint8Array(44 + numSamples);
 
-    // Aesthetic Chill Sine Harmony
-    function playAestheticSwell() {
-      if (audioUnlocked) return;
-      audioUnlocked = true;
+      // WAV Header
+      const writeStr = (offset, str) => {
+        for (let i = 0; i < str.length; i++) buffer[offset + i] = str.charCodeAt(i);
+      };
+      writeStr(0, 'RIFF');
+      new DataView(buffer.buffer).setUint32(4, 36 + numSamples, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      new DataView(buffer.buffer).setUint32(16, 16, true);
+      new DataView(buffer.buffer).setUint16(20, 1, true); // PCM
+      new DataView(buffer.buffer).setUint16(22, 1, true); // Mono
+      new DataView(buffer.buffer).setUint32(24, sampleRate, true);
+      new DataView(buffer.buffer).setUint32(28, sampleRate, true);
+      new DataView(buffer.buffer).setUint16(32, 1, true);
+      new DataView(buffer.buffer).setUint16(34, 8, true); // 8-bit
+      writeStr(36, 'data');
+      new DataView(buffer.buffer).setUint32(40, numSamples, true);
 
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
-        if (ctx.state === 'suspended') {
-          ctx.resume();
-        }
-
-        // Dreamy ambient chords (Eb Major Pentatonic - Soft and Aesthetic)
-        const notes = [
-          { f: 311.13, delay: 0.0, len: 2.2 }, // Eb4
-          { f: 466.16, delay: 0.15, len: 2.4 }, // Bb4
-          { f: 622.25, delay: 0.32, len: 2.6 }, // Eb5
-          { f: 932.33, delay: 0.50, len: 3.0 }, // Bb5
-          { f: 1244.51, delay: 0.68, len: 3.2 } // Eb6
-        ];
-
-        notes.forEach(note => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(note.f, ctx.currentTime + note.delay);
-
-          gain.gain.setValueAtTime(0.0001, ctx.currentTime + note.delay);
-          gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + note.delay + 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + note.delay + note.len);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start(ctx.currentTime + note.delay);
-          osc.stop(ctx.currentTime + note.delay + note.len + 0.1);
+      // Harmonious Chime Tones (523Hz C5, 659Hz E5, 784Hz G5, 1046Hz C6)
+      const freqs = [523.25, 659.25, 783.99, 1046.50];
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        let sample = 0;
+        freqs.forEach((f, idx) => {
+          const delay = idx * 0.12;
+          if (t >= delay) {
+            const decay = Math.exp(-(t - delay) * 3.5);
+            sample += Math.sin(2 * Math.PI * f * (t - delay)) * decay;
+          }
         });
-      } catch (err) {
-        console.warn("Audio Context init blocked:", err);
+        const val = Math.floor(128 + Math.max(-1, Math.min(1, sample * 0.35)) * 127);
+        buffer[44 + i] = val;
       }
 
-      // Hide gate overlay smoothly
-      const gate = document.getElementById('audioGate');
-      gate.style.opacity = '0';
-      setTimeout(() => { gate.style.display = 'none'; }, 500);
+      const blob = new Blob([buffer], { type: 'audio/wav' });
+      return URL.createObjectURL(blob);
     }
 
-    // Direct Unlock on gate tap (Bypasses Chrome restrictions 100%)
-    document.getElementById('audioGate').addEventListener('pointerdown', playAestheticSwell);
-    document.getElementById('audioGate').addEventListener('click', playAestheticSwell);
+    const soundUrl = generateChimeWAV();
+    const player = new Audio(soundUrl);
 
-    // 3D Card Interactive Tilt
+    function triggerAudioAndEnter() {
+      // Direct Native Play
+      player.currentTime = 0;
+      player.play().catch(e => console.log(e));
+
+      // Dismiss overlay
+      const gate = document.getElementById('audioGate');
+      if (gate) {
+        gate.style.opacity = '0';
+        setTimeout(() => { gate.style.display = 'none'; }, 400);
+      }
+    }
+
+    // Touch/Click Gate Overlay
+    const gateEl = document.getElementById('audioGate');
+    gateEl.addEventListener('touchstart', triggerAudioAndEnter, { passive: true, once: true });
+    gateEl.addEventListener('click', triggerAudioAndEnter, { once: true });
+
+    // Click button re-triggers chime
+    document.getElementById('taskBtn').addEventListener('click', () => {
+      const clickAudio = new Audio(soundUrl);
+      clickAudio.play().catch(() => {});
+    });
+
+    // 3D Card Gyro Touch Tilt
     const cardEl = document.getElementById('card');
     window.addEventListener('touchmove', (e) => {
       const touch = e.touches[0];
-      const rotateX = (window.innerHeight / 2 - touch.clientY) / 20;
-      const rotateY = (touch.clientX - window.innerWidth / 2) / 20;
+      const rotateX = (window.innerHeight / 2 - touch.clientY) / 22;
+      const rotateY = (touch.clientX - window.innerWidth / 2) / 22;
       cardEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }, { passive: true });
 
