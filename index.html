@@ -20,6 +20,7 @@
       background: #05040a;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 16px;
@@ -47,6 +48,22 @@
     @keyframes pulseGlow {
       0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
       100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    }
+
+    /* Subtle Sound Indicator */
+    .sound-badge {
+      position: fixed;
+      top: 14px;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #e9d5ff;
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      cursor: pointer;
     }
 
     /* 3D Glass Card */
@@ -168,7 +185,7 @@
       padding: 0 4px;
     }
 
-    /* Start Task CTA Button */
+    /* Start Task 3D Golden CTA Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -212,11 +229,10 @@
 
   <div class="ambient-glow"></div>
 
-  <!-- Hidden Native Audio with Direct Soft Calm Chime -->
-  <audio id="calmSound" preload="auto">
-    <source src="https://actions.google.com/sounds/v1/foley/beeps_single.ogg" type="audio/ogg">
-    <source src="https://cdn.freesound.org/previews/264/264981_4486188-lq.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Sound Status Pill -->
+  <div class="sound-badge" id="soundStatus">
+    🔔 Sound: Tap anywhere to listen
+  </div>
 
   <div class="card" id="card">
     <div class="floating-popup">
@@ -234,7 +250,7 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Bot URL with auto /start parameter -->
+    <!-- Auto start bot URL -->
     <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskBtn" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
@@ -248,73 +264,93 @@
   </div>
 
   <script>
-    const audioElement = document.getElementById('calmSound');
-    let soundTriggered = false;
+    // Pure In-Memory Soft Bell Chime Generator (Chrome mobile verified)
+    function buildSoftBellURI() {
+      const sampleRate = 22050;
+      const duration = 2.0;
+      const totalSamples = Math.floor(sampleRate * duration);
+      const buffer = new ArrayBuffer(44 + totalSamples * 2);
+      const view = new DataView(buffer);
 
-    // Direct Native Audio Trigger
-    function playCalmTone() {
-      if (soundTriggered) return;
-      soundTriggered = true;
+      const writeString = (offset, string) => {
+        for (let i = 0; i < string.length; i++) {
+          view.setUint8(offset + i, string.charCodeAt(i));
+        }
+      };
 
-      audioElement.volume = 0.5; // Soft volume
-      audioElement.currentTime = 0;
-      
-      const playPromise = audioElement.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Fallback if network blocked
-          playLocalSynthesizer();
+      writeString(0, 'RIFF');
+      view.setUint32(4, 36 + totalSamples * 2, true);
+      writeString(8, 'WAVE');
+      writeString(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true); // PCM format
+      view.setUint16(22, 1, true); // Mono
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true); // 16-bit
+      writeString(36, 'data');
+      view.setUint32(40, totalSamples * 2, true);
+
+      // Soft harmonic chime frequencies (C5, G5, E6)
+      const freqs = [523.25, 783.99, 1318.51];
+      for (let i = 0; i < totalSamples; i++) {
+        const t = i / sampleRate;
+        let sample = 0;
+        freqs.forEach((freq, idx) => {
+          const delay = idx * 0.12;
+          if (t >= delay) {
+            const decay = Math.exp(-(t - delay) * 3.2);
+            sample += Math.sin(2 * Math.PI * freq * (t - delay)) * decay;
+          }
         });
+        const clamped = Math.max(-1, Math.min(1, sample * 0.28));
+        view.setInt16(44 + i * 2, clamped < 0 ? clamped * 0x8000 : clamped * 0x7FFF, true);
       }
+
+      const blob = new Blob([buffer], { type: 'audio/wav' });
+      return URL.createObjectURL(blob);
     }
 
-    // Direct fallback if audio file isn't cached
-    function playLocalSynthesizer() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioContext();
-        if (ctx.state === 'suspended') ctx.resume();
+    const bellSoundURI = buildSoftBellURI();
+    const bellAudio = new Audio(bellSoundURI);
+    let isPlayed = false;
 
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+    function playBellSound() {
+      if (isPlayed) return;
+      isPlayed = true;
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5 Soft Tone
-
-        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.8);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 1.9);
-      } catch (e) {}
+      bellAudio.currentTime = 0;
+      bellAudio.play().then(() => {
+        const status = document.getElementById('soundStatus');
+        if (status) status.innerText = '🔊 Playing Soft Tune';
+      }).catch(err => {
+        console.warn("Autoplay block:", err);
+      });
     }
 
-    // Screen par kahin bhi pehla touch ya click hote hi play karega
-    document.addEventListener('touchstart', playCalmTone, { passive: true, once: true });
-    document.addEventListener('pointerdown', playCalmTone, { once: true });
-    document.addEventListener('click', playCalmTone, { once: true });
+    // Har tarah ke touch aur tap par trigger
+    window.addEventListener('touchstart', playBellSound, { passive: true, once: true });
+    window.addEventListener('pointerdown', playBellSound, { once: true });
+    window.addEventListener('click', playBellSound, { once: true });
 
-    // Button click hone par bhi sound trigger karega
+    // Task button click hone par dubara soft chime bajega
     document.getElementById('taskBtn').addEventListener('click', () => {
-      audioElement.currentTime = 0;
-      audioElement.play().catch(() => playLocalSynthesizer());
+      const clickAudio = new Audio(bellSoundURI);
+      clickAudio.play().catch(() => {});
     });
 
-    // 3D Card Gyro Touch Tilt
-    const cardEl = document.getElementById('card');
+    // 3D Card Touch Gyro Tilt
+    const card = document.getElementById('card');
     window.addEventListener('touchmove', (e) => {
       const touch = e.touches[0];
       const rotateX = (window.innerHeight / 2 - touch.clientY) / 24;
       const rotateY = (touch.clientX - window.innerWidth / 2) / 24;
-      cardEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }, { passive: true });
 
     window.addEventListener('touchend', () => {
-      cardEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      card.style.transform = 'rotateX(0deg) rotateY(0deg)';
     });
   </script>
 
