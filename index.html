@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AXY - Easy Task Grab Now</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,131 +19,101 @@
       background: #05040a;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 20px 16px;
       color: #ffffff;
       overflow-x: hidden;
-      perspective: 1200px;
+      perspective: 1000px;
+      position: relative;
     }
 
-    .overlay {
+    /* Ambient Background Glow */
+    .ambient-glow {
       position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(40, 25, 80, 0.5), rgba(5, 4, 10, 0.92));
-      backdrop-filter: blur(8px);
-      z-index: 1;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(234, 179, 8, 0.12) 40%, transparent 70%);
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(234, 179, 8, 0.15) 45%, transparent 70%);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: blur(60px);
+      filter: blur(55px);
       z-index: 0;
       pointer-events: none;
-      animation: ambientPulse 5s ease-in-out infinite;
+      animation: pulseGlow 4s ease-in-out infinite alternate;
     }
 
-    @keyframes ambientPulse {
-      0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
     }
 
-    /* Sound Control Pill (Top) */
-    .sound-badge {
-      position: fixed;
-      top: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(168, 85, 247, 0.25);
-      border: 1px solid rgba(168, 85, 247, 0.5);
-      padding: 8px 18px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #f3e8ff;
-      backdrop-filter: blur(12px);
-      cursor: pointer;
-      z-index: 50;
-      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-      animation: pulsePill 2s infinite ease-in-out;
-    }
-
-    @keyframes pulsePill {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
+    /* 3D Glass Card */
     .card {
       position: relative;
-      background: linear-gradient(165deg, rgba(28, 24, 48, 0.97), rgba(12, 10, 22, 0.98));
-      border: 1px solid rgba(168, 85, 247, 0.25);
-      border-radius: 30px;
+      background: linear-gradient(165deg, rgba(28, 24, 48, 0.95), rgba(12, 10, 22, 0.98));
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 28px;
       width: 100%;
-      max-width: 360px;
-      padding: 36px 22px 28px;
+      max-width: 350px;
+      padding: 34px 22px 26px;
       text-align: center;
-      backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       z-index: 10;
-      transform-style: preserve-3d;
       box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.04),
-        0 0 80px rgba(168, 85, 247, 0.15),
-        0 0 40px rgba(234, 179, 8, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      animation: popupIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      opacity: 0;
+        0 25px 50px rgba(0, 0, 0, 0.85),
+        0 0 50px rgba(168, 85, 247, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      transform-style: preserve-3d;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    @keyframes popupIn {
-      0% { opacity: 0; transform: scale(0.7) translateY(40px) rotateX(8deg); }
-      70% { opacity: 1; transform: scale(1.04) translateY(-10px) rotateX(-2deg); }
-      100% { opacity: 1; transform: scale(1) translateY(0) rotateX(0); }
-    }
-
+    /* Floating Status Badge */
     .floating-popup {
       position: absolute;
-      top: -15px;
+      top: -14px;
       right: 18px;
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
-      font-size: 11.5px;
+      color: #ffffff;
+      font-size: 11px;
       font-weight: 700;
-      padding: 6px 13px;
+      padding: 6px 14px;
       border-radius: 50px;
-      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.45);
-      display: flex;
+      box-shadow: 0 6px 16px rgba(34, 197, 94, 0.5);
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       z-index: 20;
     }
 
     .floating-popup span {
-      width: 7px;
-      height: 7px;
-      background: #fff;
+      width: 6px;
+      height: 6px;
+      background: #ffffff;
       border-radius: 50%;
-      box-shadow: 0 0 8px #fff;
+      box-shadow: 0 0 6px #ffffff;
     }
 
+    /* 3D Avatar Glow */
     .avatar-wrapper {
       position: relative;
-      width: 140px;
-      height: 140px;
-      margin: 0 auto 24px;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 22px;
       border-radius: 50%;
-      padding: 5px;
+      padding: 4px;
       background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4, #f59e0b);
       background-size: 300% 300%;
-      box-shadow: 0 20px 45px rgba(139, 92, 246, 0.5);
+      animation: gradientRotate 4s linear infinite;
+      box-shadow: 0 15px 35px rgba(139, 92, 246, 0.45);
+    }
+
+    @keyframes gradientRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .avatar-img {
@@ -153,35 +123,36 @@
       border-radius: 50%;
       display: block;
       background: #0f0e17;
-      border: 4px solid #0f0e17;
+      border: 3px solid #0f0e17;
     }
 
+    /* Active Badge */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.1));
+      background: rgba(245, 158, 11, 0.15);
       color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      padding: 7px 16px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 6px 14px;
       border-radius: 50px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       text-transform: uppercase;
     }
 
     .badge span {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background: #22c55e;
       border-radius: 50%;
-      box-shadow: 0 0 12px #22c55e;
+      box-shadow: 0 0 10px #22c55e;
     }
 
     h1 {
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 800;
       line-height: 1.25;
       margin-bottom: 10px;
@@ -189,13 +160,14 @@
     }
 
     p.subtitle {
-      font-size: 14px;
+      font-size: 13.5px;
       color: #94a3b8;
       line-height: 1.5;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
       padding: 0 4px;
     }
 
+    /* Start Task 3D Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -204,22 +176,22 @@
       gap: 10px;
       width: 100%;
       padding: 16px 18px;
-      background: linear-gradient(135deg, #facc15 0%, #eab308 45%, #ca8a04 100%);
+      background: linear-gradient(135deg, #facc15 0%, #eab308 50%, #ca8a04 100%);
       color: #000000;
-      font-size: 15.5px;
+      font-size: 16px;
       font-weight: 800;
       text-decoration: none;
       border-radius: 16px;
-      letter-spacing: 0.3px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 12px 28px rgba(234, 179, 8, 0.45), 0 5px 0 #a16207;
-      transition: all 0.25s ease;
+      box-shadow: 
+        0 10px 24px rgba(234, 179, 8, 0.45),
+        0 4px 0 #a16207;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .cta-btn:active {
-      transform: translateY(3px) scale(0.98);
-      box-shadow: 0 4px 12px rgba(234, 179, 8, 0.35), 0 2px 0 #a16207;
+      transform: translateY(3px);
+      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.35), 0 1px 0 #a16207;
     }
 
     .cta-btn svg {
@@ -229,7 +201,7 @@
     }
 
     .footer-note {
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 12px;
       color: #64748b;
     }
@@ -237,20 +209,15 @@
 </head>
 <body>
 
-  <div class="overlay"></div>
+  <div class="ambient-glow"></div>
 
-  <!-- Visible Sound Pill for direct user click -->
-  <div class="sound-badge" id="soundBtn">
-    🔊 Sound: ON (Tap to test)
-  </div>
-
-  <div class="card">
+  <div class="card" id="mainCard">
     <div class="floating-popup">
       <span></span> New Task
     </div>
 
     <div class="avatar-wrapper">
-      <img src="dp.jpg" alt="Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
+      <img src="dp.jpg" alt="Task Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
     </div>
 
     <div class="badge">
@@ -260,8 +227,8 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Auto-Start Telegram Bot -->
-    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="startBtn" target="_blank" rel="noopener noreferrer">
+    <!-- Auto start bot link -->
+    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskLink" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
       </svg>
@@ -274,97 +241,62 @@
   </div>
 
   <script>
-    let audioCtx = null;
+    // 3D Card Gyroscope / Tilt Effect on Mobile Touch & Move
+    const card = document.getElementById('mainCard');
+    window.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const x = (window.innerWidth / 2 - touch.clientX) / 25;
+      const y = (window.innerHeight / 2 - touch.clientY) / 25;
+      card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+    }, { passive: true });
 
-    // Direct Pure Acoustic Crystal Melody Generator (Guaranteed to work without files)
-    function playAestheticChime() {
+    window.addEventListener('touchend', () => {
+      card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+
+    // High Clarity Aesthetic Chime Sound (Zero external files, 100% Chrome compatible)
+    let audioPlayed = false;
+    function playAestheticAudio() {
+      if (audioPlayed) return;
+      audioPlayed = true;
+
       try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+
+        if (ctx.state === 'suspended') {
+          ctx.resume();
         }
 
-        // Resume audio context if browser paused it
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+        // Dreamy aesthetic bell chords (C5, G5, E6)
+        const notes = [523.25, 783.99, 1318.51];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
 
-        // Harmonious crystal notes sequence (D4, A4, D5, F#5, A5)
-        const notes = [
-          { freq: 293.66, delay: 0.0, dur: 1.8 },
-          { freq: 440.00, delay: 0.12, dur: 1.8 },
-          { freq: 587.33, delay: 0.24, dur: 2.0 },
-          { freq: 739.99, delay: 0.36, dur: 2.2 },
-          { freq: 880.00, delay: 0.48, dur: 2.5 }
-        ];
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
 
-        notes.forEach(n => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
-          osc.type = 'triangle'; // Smooth mellow crystal sound
-          osc.frequency.setValueAtTime(n.freq, audioCtx.currentTime + n.delay);
-
-          // Volume Envelope
-          gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + n.delay);
-          gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + n.delay + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + n.delay + n.dur);
+          gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.12);
+          gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + idx * 0.12 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.12 + 1.8);
 
           osc.connect(gain);
-          gain.connect(audioCtx.destination);
+          gain.connect(ctx.destination);
 
-          osc.start(audioCtx.currentTime + n.delay);
-          osc.stop(audioCtx.currentTime + n.delay + n.dur);
+          osc.start(ctx.currentTime + idx * 0.12);
+          osc.stop(ctx.currentTime + idx * 0.12 + 1.9);
         });
       } catch (err) {
-        console.error(err);
+        console.warn(err);
       }
     }
 
-    // 1. Click top sound pill
-    document.getElementById('soundBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      playAestheticChime();
-    });
-
-    // 2. Click Start Task Button also triggers chime before Telegram opens
-    document.getElementById('startBtn').addEventListener('click', () => {
-      playAestheticChime();
-    });
-
-    // 3. User taps or scrolls anywhere on screen
-    window.addEventListener('touchstart', playAestheticChime, { once: true });
-    window.addEventListener('click', playAestheticChime, { once: true });
+    // Chrome audio policy: Touch/tap/scroll anywhere triggers crystal audio instantly
+    window.addEventListener('touchstart', playAestheticAudio, { once: true, passive: true });
+    window.addEventListener('pointerdown', playAestheticAudio, { once: true });
+    window.addEventListener('click', playAestheticAudio, { once: true });
+    window.addEventListener('scroll', playAestheticAudio, { once: true });
   </script>
-
-</body>
-</html>
-    osc.type = 'sine';
-          osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.15);
-          gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
-          gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.15 + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.15 + 1.2);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + i * 0.15);
-          osc.stop(ctx.currentTime + i * 0.15 + 1.3);
-        });
-      } catch (e) {}
-    }
-
-    // Try auto-play immediately (Works on desktop & some mobile browsers)
-    window.addEventListener('DOMContentLoaded', () => {
-      audio.play().then(() => {
-        isPlayed = true;
-        banner.classList.add('hidden');
-      }).catch(() => {
-        // Browser ne block kiya -> screen pe tap karte hi chalega
-      });
-    });
-
-    // Mobile me screen touch karte hi 100% play hoga
-    window.addEventListener('touchstart', startAestheticTune, { passive: true, once: true });
-    window.addEventListener('click', startAestheticTune, { once: true });
-  </script>
-
 </body>
 </html>
