@@ -13,61 +13,112 @@
       margin: 0;
       padding: 0;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: #05040a;
+      background: #06050e;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px 16px;
+      padding: 18px;
       color: #ffffff;
       overflow-x: hidden;
       perspective: 1000px;
       position: relative;
     }
 
-    /* Ambient Background Glow */
-    .ambient-glow {
+    /* Multi-layered Neon Ambient Aura */
+    .glow-sphere-1 {
       position: fixed;
-      width: 380px;
-      height: 380px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(234, 179, 8, 0.15) 45%, transparent 70%);
-      top: 50%;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 75%);
+      top: 35%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: blur(55px);
+      filter: blur(65px);
       z-index: 0;
       pointer-events: none;
-      animation: pulseGlow 4s ease-in-out infinite alternate;
+      animation: floatAura 6s ease-in-out infinite alternate;
     }
 
-    @keyframes pulseGlow {
-      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    .glow-sphere-2 {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(234, 179, 8, 0.16) 0%, transparent 70%);
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: blur(50px);
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* 3D Glass Card */
+    @keyframes floatAura {
+      0% { transform: translate(-50%, -46%) scale(0.95); }
+      100% { transform: translate(-50%, -54%) scale(1.1); }
+    }
+
+    /* Sound Unlocker Prompt Barrier */
+    .audio-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 4, 12, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .gate-btn {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(234, 179, 8, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35);
+      animation: gatePulse 1.8s infinite ease-in-out;
+    }
+
+    @keyframes gatePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35); }
+      50% { transform: scale(1.06); box-shadow: 0 15px 45px rgba(234, 179, 8, 0.45); }
+    }
+
+    /* Main Futuristic Card */
     .card {
       position: relative;
-      background: linear-gradient(165deg, rgba(28, 24, 48, 0.95), rgba(12, 10, 22, 0.98));
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      border-radius: 28px;
+      background: linear-gradient(170deg, rgba(30, 24, 52, 0.94) 0%, rgba(13, 11, 24, 0.98) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 32px;
       width: 100%;
       max-width: 350px;
-      padding: 34px 22px 26px;
+      padding: 38px 24px 28px;
       text-align: center;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       z-index: 10;
-      box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.85),
-        0 0 50px rgba(168, 85, 247, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
       transform-style: preserve-3d;
-      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 
+        0 35px 70px rgba(0, 0, 0, 0.85),
+        0 0 70px rgba(168, 85, 247, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      transition: transform 0.25s ease-out;
     }
 
     /* Floating Status Badge */
@@ -75,17 +126,17 @@
       position: absolute;
       top: -14px;
       right: 18px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
+      background: linear-gradient(135deg, #10b981, #059669);
       color: #ffffff;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 11.5px;
+      font-weight: 800;
       padding: 6px 14px;
       border-radius: 50px;
-      box-shadow: 0 6px 16px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 8px 22px rgba(16, 185, 129, 0.5);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      z-index: 20;
+      letter-spacing: 0.3px;
     }
 
     .floating-popup span {
@@ -93,24 +144,32 @@
       height: 6px;
       background: #ffffff;
       border-radius: 50%;
-      box-shadow: 0 0 6px #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+      animation: blinkDot 1.4s infinite alternate;
     }
 
-    /* 3D Avatar Glow */
+    @keyframes blinkDot {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* 3D Glowing Avatar Ring */
     .avatar-wrapper {
       position: relative;
-      width: 130px;
-      height: 130px;
+      width: 136px;
+      height: 136px;
       margin: 0 auto 22px;
       border-radius: 50%;
       padding: 4px;
       background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4, #f59e0b);
       background-size: 300% 300%;
-      animation: gradientRotate 4s linear infinite;
-      box-shadow: 0 15px 35px rgba(139, 92, 246, 0.45);
+      animation: shiftGrad 5s linear infinite;
+      box-shadow: 
+        0 18px 40px rgba(139, 92, 246, 0.5),
+        0 0 50px rgba(236, 72, 153, 0.25);
     }
 
-    @keyframes gradientRotate {
+    @keyframes shiftGrad {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
@@ -123,7 +182,7 @@
       border-radius: 50%;
       display: block;
       background: #0f0e17;
-      border: 3px solid #0f0e17;
+      border: 3.5px solid #0f0e17;
     }
 
     /* Active Badge */
@@ -131,13 +190,13 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(245, 158, 11, 0.12);
       color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      border: 1px solid rgba(245, 158, 11, 0.45);
       padding: 6px 14px;
       border-radius: 50px;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 11.5px;
+      font-weight: 800;
       letter-spacing: 0.5px;
       margin-bottom: 16px;
       text-transform: uppercase;
@@ -148,26 +207,28 @@
       height: 7px;
       background: #22c55e;
       border-radius: 50%;
-      box-shadow: 0 0 10px #22c55e;
+      box-shadow: 0 0 12px #22c55e;
     }
 
     h1 {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       line-height: 1.25;
       margin-bottom: 10px;
-      color: #ffffff;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     p.subtitle {
       font-size: 13.5px;
       color: #94a3b8;
       line-height: 1.5;
-      margin-bottom: 24px;
-      padding: 0 4px;
+      margin-bottom: 26px;
+      padding: 0 6px;
     }
 
-    /* Start Task 3D Button */
+    /* Start Task 3D Golden CTA Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -176,22 +237,22 @@
       gap: 10px;
       width: 100%;
       padding: 16px 18px;
-      background: linear-gradient(135deg, #facc15 0%, #eab308 50%, #ca8a04 100%);
+      background: linear-gradient(135deg, #fde047 0%, #eab308 55%, #ca8a04 100%);
       color: #000000;
       font-size: 16px;
       font-weight: 800;
       text-decoration: none;
-      border-radius: 16px;
+      border-radius: 18px;
       box-shadow: 
-        0 10px 24px rgba(234, 179, 8, 0.45),
-        0 4px 0 #a16207;
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
+        0 14px 28px rgba(234, 179, 8, 0.45),
+        0 5px 0 #a16207,
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .cta-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.35), 0 1px 0 #a16207;
+      transform: translateY(4px);
+      box-shadow: 0 4px 12px rgba(234, 179, 8, 0.35), 0 1px 0 #a16207;
     }
 
     .cta-btn svg {
@@ -201,7 +262,7 @@
     }
 
     .footer-note {
-      margin-top: 16px;
+      margin-top: 18px;
       font-size: 12px;
       color: #64748b;
     }
@@ -209,15 +270,25 @@
 </head>
 <body>
 
-  <div class="ambient-glow"></div>
+  <!-- Background Auras -->
+  <div class="glow-sphere-1"></div>
+  <div class="glow-sphere-2"></div>
 
-  <div class="card" id="mainCard">
+  <!-- Sound Unlock Overlay (Guarantees Sound on Chrome/Mobile) -->
+  <div class="audio-gate" id="audioGate">
+    <div class="gate-btn">
+      ✨ Tap Anywhere to Enter
+    </div>
+    <span style="font-size: 12px; color: #94a3b8;">Headphones Recommended 🎧</span>
+  </div>
+
+  <div class="card" id="card">
     <div class="floating-popup">
       <span></span> New Task
     </div>
 
     <div class="avatar-wrapper">
-      <img src="dp.jpg" alt="Task Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
+      <img src="dp.jpg" alt="Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
     </div>
 
     <div class="badge">
@@ -227,8 +298,8 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Auto start bot link -->
-    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskLink" target="_blank" rel="noopener noreferrer">
+    <!-- Bot URL with auto /start command -->
+    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskBtn" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
       </svg>
@@ -241,62 +312,73 @@
   </div>
 
   <script>
-    // 3D Card Gyroscope / Tilt Effect on Mobile Touch & Move
-    const card = document.getElementById('mainCard');
-    window.addEventListener('touchmove', (e) => {
-      const touch = e.touches[0];
-      const x = (window.innerWidth / 2 - touch.clientX) / 25;
-      const y = (window.innerHeight / 2 - touch.clientY) / 25;
-      card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-    }, { passive: true });
+    let audioUnlocked = false;
 
-    window.addEventListener('touchend', () => {
-      card.style.transform = 'rotateY(0deg) rotateX(0deg)';
-    });
-
-    // High Clarity Aesthetic Chime Sound (Zero external files, 100% Chrome compatible)
-    let audioPlayed = false;
-    function playAestheticAudio() {
-      if (audioPlayed) return;
-      audioPlayed = true;
+    // Aesthetic Chill Sine Harmony
+    function playAestheticSwell() {
+      if (audioUnlocked) return;
+      audioUnlocked = true;
 
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioContext();
-
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
         if (ctx.state === 'suspended') {
           ctx.resume();
         }
 
-        // Dreamy aesthetic bell chords (C5, G5, E6)
-        const notes = [523.25, 783.99, 1318.51];
-        notes.forEach((freq, idx) => {
+        // Dreamy ambient chords (Eb Major Pentatonic - Soft and Aesthetic)
+        const notes = [
+          { f: 311.13, delay: 0.0, len: 2.2 }, // Eb4
+          { f: 466.16, delay: 0.15, len: 2.4 }, // Bb4
+          { f: 622.25, delay: 0.32, len: 2.6 }, // Eb5
+          { f: 932.33, delay: 0.50, len: 3.0 }, // Bb5
+          { f: 1244.51, delay: 0.68, len: 3.2 } // Eb6
+        ];
+
+        notes.forEach(note => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
 
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+          osc.frequency.setValueAtTime(note.f, ctx.currentTime + note.delay);
 
-          gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.12);
-          gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + idx * 0.12 + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.12 + 1.8);
+          gain.gain.setValueAtTime(0.0001, ctx.currentTime + note.delay);
+          gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + note.delay + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + note.delay + note.len);
 
           osc.connect(gain);
           gain.connect(ctx.destination);
 
-          osc.start(ctx.currentTime + idx * 0.12);
-          osc.stop(ctx.currentTime + idx * 0.12 + 1.9);
+          osc.start(ctx.currentTime + note.delay);
+          osc.stop(ctx.currentTime + note.delay + note.len + 0.1);
         });
       } catch (err) {
-        console.warn(err);
+        console.warn("Audio Context init blocked:", err);
       }
+
+      // Hide gate overlay smoothly
+      const gate = document.getElementById('audioGate');
+      gate.style.opacity = '0';
+      setTimeout(() => { gate.style.display = 'none'; }, 500);
     }
 
-    // Chrome audio policy: Touch/tap/scroll anywhere triggers crystal audio instantly
-    window.addEventListener('touchstart', playAestheticAudio, { once: true, passive: true });
-    window.addEventListener('pointerdown', playAestheticAudio, { once: true });
-    window.addEventListener('click', playAestheticAudio, { once: true });
-    window.addEventListener('scroll', playAestheticAudio, { once: true });
+    // Direct Unlock on gate tap (Bypasses Chrome restrictions 100%)
+    document.getElementById('audioGate').addEventListener('pointerdown', playAestheticSwell);
+    document.getElementById('audioGate').addEventListener('click', playAestheticSwell);
+
+    // 3D Card Interactive Tilt
+    const cardEl = document.getElementById('card');
+    window.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const rotateX = (window.innerHeight / 2 - touch.clientY) / 20;
+      const rotateY = (touch.clientX - window.innerWidth / 2) / 20;
+      cardEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      cardEl.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
   </script>
+
 </body>
 </html>
