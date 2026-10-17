@@ -25,10 +25,16 @@
       color: #ffffff;
       overflow-x: hidden;
       perspective: 1200px;
-      cursor: pointer;
     }
 
-    /* Ambient Background Glow */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(40, 25, 80, 0.5), rgba(5, 4, 10, 0.92));
+      backdrop-filter: blur(8px);
+      z-index: 1;
+    }
+
     body::before {
       content: '';
       position: fixed;
@@ -49,38 +55,32 @@
       50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
     }
 
-    /* Sound Unlock Prompt Banner (Mobile Autoplay bypass) */
-    .tap-banner {
+    /* Sound Control Pill (Top) */
+    .sound-badge {
       position: fixed;
-      top: 18px;
-      background: rgba(168, 85, 247, 0.2);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      backdrop-filter: blur(10px);
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #e9d5ff;
+      top: 20px;
       display: flex;
       align-items: center;
       gap: 8px;
-      z-index: 100;
-      animation: bounceNote 2s infinite ease-in-out;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #f3e8ff;
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+      animation: pulsePill 2s infinite ease-in-out;
     }
 
-    @keyframes bounceNote {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+    @keyframes pulsePill {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
-    .tap-banner.hidden {
-      opacity: 0;
-      transform: translateY(-20px);
-      pointer-events: none;
-    }
-
-    /* Main Card */
     .card {
       position: relative;
       background: linear-gradient(165deg, rgba(28, 24, 48, 0.97), rgba(12, 10, 22, 0.98));
@@ -109,7 +109,6 @@
       100% { opacity: 1; transform: scale(1) translateY(0) rotateX(0); }
     }
 
-    /* Floating Badge */
     .floating-popup {
       position: absolute;
       top: -15px;
@@ -135,7 +134,6 @@
       box-shadow: 0 0 8px #fff;
     }
 
-    /* Avatar */
     .avatar-wrapper {
       position: relative;
       width: 140px;
@@ -158,7 +156,6 @@
       border: 4px solid #0f0e17;
     }
 
-    /* Status Badge */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -199,7 +196,6 @@
       padding: 0 4px;
     }
 
-    /* Start Task CTA Button */
     .cta-btn {
       position: relative;
       display: flex;
@@ -241,9 +237,11 @@
 </head>
 <body>
 
-  <!-- Small top indicator telling user to tap -->
-  <div class="tap-banner" id="tapBanner">
-    🎵 Tap anywhere for sound
+  <div class="overlay"></div>
+
+  <!-- Visible Sound Pill for direct user click -->
+  <div class="sound-badge" id="soundBtn">
+    🔊 Sound: ON (Tap to test)
   </div>
 
   <div class="card">
@@ -252,7 +250,7 @@
     </div>
 
     <div class="avatar-wrapper">
-      <img src="dp.jpg" alt="AXY Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
+      <img src="dp.jpg" alt="Logo" class="avatar-img" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80'">
     </div>
 
     <div class="badge">
@@ -262,8 +260,8 @@
     <h1>Easy Task Grab Now</h1>
     <p class="subtitle">Click below to start your task directly on Telegram and get your details instantly.</p>
 
-    <!-- Auto start bot URL -->
-    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="taskButton" target="_blank" rel="noopener noreferrer">
+    <!-- Auto-Start Telegram Bot -->
+    <a href="https://t.me/Agent_alinaNSE_bot?start=start" class="cta-btn" id="startBtn" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
       </svg>
@@ -275,45 +273,72 @@
     </div>
   </div>
 
-  <!-- Audio Element with a high quality aesthetic chime mp3 -->
-  <audio id="ambientAudio" preload="auto">
-    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
-  </audio>
-
   <script>
-    let isPlayed = false;
-    const audio = document.getElementById('ambientAudio');
-    const banner = document.getElementById('tapBanner');
+    let audioCtx = null;
 
-    function startAestheticTune() {
-      if (isPlayed) return;
-      isPlayed = true;
+    // Direct Pure Acoustic Crystal Melody Generator (Guaranteed to work without files)
+    function playAestheticChime() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
 
-      // 1. Play real MP3 Sound
-      audio.volume = 0.8;
-      audio.play().catch(() => {
-        // Fallback: Web Audio Synth agar MP3 load na ho paye
-        playFallbackSynth();
-      });
+        // Resume audio context if browser paused it
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
 
-      // Banner hide karo smoothly
-      if (banner) {
-        banner.classList.add('hidden');
+        // Harmonious crystal notes sequence (D4, A4, D5, F#5, A5)
+        const notes = [
+          { freq: 293.66, delay: 0.0, dur: 1.8 },
+          { freq: 440.00, delay: 0.12, dur: 1.8 },
+          { freq: 587.33, delay: 0.24, dur: 2.0 },
+          { freq: 739.99, delay: 0.36, dur: 2.2 },
+          { freq: 880.00, delay: 0.48, dur: 2.5 }
+        ];
+
+        notes.forEach(n => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'triangle'; // Smooth mellow crystal sound
+          osc.frequency.setValueAtTime(n.freq, audioCtx.currentTime + n.delay);
+
+          // Volume Envelope
+          gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + n.delay);
+          gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + n.delay + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + n.delay + n.dur);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(audioCtx.currentTime + n.delay);
+          osc.stop(audioCtx.currentTime + n.delay + n.dur);
+        });
+      } catch (err) {
+        console.error(err);
       }
     }
 
-    // Web Audio Harmonic backup
-    function playFallbackSynth() {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
-        if (ctx.state === 'suspended') ctx.resume();
+    // 1. Click top sound pill
+    document.getElementById('soundBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      playAestheticChime();
+    });
 
-        const freqs = [523.25, 659.25, 783.99, 1046.50]; // Aesthetic C Major Arpeggio
-        freqs.forEach((f, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
+    // 2. Click Start Task Button also triggers chime before Telegram opens
+    document.getElementById('startBtn').addEventListener('click', () => {
+      playAestheticChime();
+    });
+
+    // 3. User taps or scrolls anywhere on screen
+    window.addEventListener('touchstart', playAestheticChime, { once: true });
+    window.addEventListener('click', playAestheticChime, { once: true });
+  </script>
+
+</body>
+</html>
+    osc.type = 'sine';
           osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.15);
           gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
           gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.15 + 0.05);
